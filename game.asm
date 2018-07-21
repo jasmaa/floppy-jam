@@ -131,22 +131,22 @@ LoadSpritesLoop:
   lda sprites, x
   sta $0200, x
   inx
-  cpx #$24
+  cpx #$10
   bne LoadSpritesLoop
 
-;LoadPalette:
-;  lda $2002
-;  lda #$3F
-;  sta $2006
-;  lda #$00
-;  sta $2006
-;  ldx #$00
-;LoadPaletteLoop:
-;  lda palette, x
-;  sta $2007
-;  inx
-;  cpx #$20
-;  bne LoadPaletteLoop
+LoadPalette:
+  lda $2002
+  lda #$3F
+  sta $2006
+  lda #$00
+  sta $2006
+  ldx #$00
+LoadPaletteLoop:
+  lda palette, x
+  sta $2007
+  inx
+  cpx #$20
+  bne LoadPaletteLoop
 
 ; bg to title
   ;lda #LOW(title_bg)
@@ -155,18 +155,14 @@ LoadSpritesLoop:
   ;sta pointerHi
   ;jsr LoadBG
   
-  ; set init state
-  lda #STATE_TITLE
-  sta gamestate
-  
   ; set seed
   lda #$66
   sta rand_seed
   
   ; set ppu
-  lda #%10010000
+  lda #%10001000
   sta $2000
-  lda #%10011110	; make blue for now
+  lda #%00010000
   sta $2001
   
 Forever:
@@ -178,6 +174,10 @@ Forever:
 ; ===========================
 ; === START NMI INTERRUPT ===
 NMI:
+  LDA #$00
+  STA $2003       ; set the low byte (00) of the RAM address
+  LDA #$02
+  STA $4014       ; set the high byte (02) of the RAM address, start the transfer
   rti ; short circuit for now
 
   ; set RAM address to 0200
@@ -187,7 +187,7 @@ NMI:
   sta $4014
   
   ; ppu clean up
-  lda #%10010000
+  lda #%10001000
   sta $2000 ; set PPUCTRL
   lda #%10011110
   sta $2001 ; set PPUMASK
@@ -242,13 +242,17 @@ ReadCtrl2Loop:
   .bank 1
   
   .org $E000
-  sprites:
-    .db $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39 
-	.db $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39
+	sprites:
+	; spaceship
+	.db $80, $00, %00000000, $80   ;00
+	.db $80, $00, %01000000, $88   ;04
+	.db $88, $10, %00000000, $80   ;08
+	.db $88, $10, %01000000, $88   ;0C
+    
 	
-  palette:
-    .db $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39 
-	.db $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39, $0F,$17,$28,$39
+	palette:
+	.db $0F,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$0F
+	.db $0F,$1C,$15,$14,$31,$02,$38,$3C,$0F,$1C,$15,$14,$31,$02,$38,$3C
   
   ; vectors
   .org $FFFA
