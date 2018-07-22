@@ -46,36 +46,44 @@ UpdateShip:
   ; fire lazer
   lda ctrl_1
   and #%10000000
-  beq .skip_fire
-  lda #$01
-  sta is_laser
-  ; messing with ship_x for some reason...
+  beq .skip_fire_all
+  
+  ; shitty lazzer firing code
+  lda laser_mask
+  and #%00000001
+  bne .skip_1
+  lda #%00000001
+  ora laser_mask
+  sta laser_mask
   lda ship_x
   clc
   adc #$04
-  sta laser_x
+  sta laser_1_x
   lda ship_y
-  sta laser_y
-.skip_fire:
+  sta laser_1_y
+  .skip_1:
+  
+.skip_fire_all:
   rts
 
 UpdateLaser:
-  lda is_laser
-  beq .kill_laser
+  lda laser_mask
+  and #%00000001
+  beq .kill_laser_1
   
   ; fire laser code here
   lda #%00000001
   sta $0212
-  lda laser_y
+  lda laser_1_y
   sec
   sbc #$05
-  sta laser_y
+  sta laser_1_y
   
-  jmp .skip
-.kill_laser:
+  jmp .end_1
+.kill_laser_1:
   lda #%00100001
   sta $0212
-.skip:
+.end_1:
   rts
   
 UpdateSprites:
@@ -97,9 +105,9 @@ UpdateSprites:
   sta $020F
   
   ; draw laser
-  lda laser_y
+  lda laser_1_y
   sta $0210
-  lda laser_x
+  lda laser_1_x
   sta $0213
   
   rts
