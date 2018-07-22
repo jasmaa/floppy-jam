@@ -4,7 +4,7 @@ InitShip:
   sta ship_y
   lda #$01
   sta ship_speed
-  lda #$10
+  lda #LASER_COOLDOWN_TIME
   sta laser_cooldown
   rts
 
@@ -53,7 +53,7 @@ UpdateShip:
   bne .skip_fire_all
   
   ; shitty lazzer firing code
-  lda #$10
+  lda #LASER_COOLDOWN_TIME
   sta laser_cooldown
   
   lda laser_mask
@@ -126,7 +126,7 @@ UpdateLaser:
   sta laser_1_y
   
   ; decide if laser is at ceiling and kill
-  cmp #$20
+  cmp #UWALL
   bcs .end_1
   lda #%11111110
   and laser_mask
@@ -145,14 +145,13 @@ UpdateLaser:
   sbc #$05
   sta laser_2_y
   
-  cmp #$20
+  cmp #UWALL
   bcs .end_2
   lda #%11111101
   and laser_mask
   sta laser_mask
   lda #%00100001
   sta $0216
-  
 .end_2:
 
   lda laser_mask
@@ -165,7 +164,7 @@ UpdateLaser:
   sbc #$05
   sta laser_3_y
   
-  cmp #$20
+  cmp #UWALL
   bcs .end_3
   lda #%11111011
   and laser_mask
