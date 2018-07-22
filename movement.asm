@@ -117,47 +117,61 @@ UpdateLaser:
   ; move lasers
   lda laser_mask
   and #%00000001
-  beq .kill_laser_1
+  beq .end_1
   lda #%00000001
   sta $0212
   lda laser_1_y
   sec
   sbc #$05
   sta laser_1_y
-  jmp .end_1
-.kill_laser_1:
+  
+  ; decide if laser is at ceiling and kill
+  cmp #$20
+  bcs .end_1
+  lda #%11111110
+  and laser_mask
+  sta laser_mask
   lda #%00100001
   sta $0212
 .end_1:
 
   lda laser_mask
   and #%00000010
-  beq .kill_laser_2
+  beq .end_2
   lda #%00000001
   sta $0216
   lda laser_2_y
   sec
   sbc #$05
   sta laser_2_y
-  jmp .end_2
-.kill_laser_2:
+  
+  cmp #$20
+  bcs .end_2
+  lda #%11111101
+  and laser_mask
+  sta laser_mask
   lda #%00100001
   sta $0216
+  
 .end_2:
 
   lda laser_mask
   and #%00000100
-  beq .kill_laser_3
+  beq .end_3
   lda #%00000001
   sta $021A
   lda laser_3_y
   sec
   sbc #$05
   sta laser_3_y
-  jmp .end_3
-.kill_laser_3:
+  
+  cmp #$20
+  bcs .end_3
+  lda #%11111000
+  and laser_mask
+  sta laser_mask
   lda #%00100001
-  sta $021A
+  sta $021C
 .end_3:
 
   rts
@@ -191,9 +205,9 @@ UpdateSprites:
   lda laser_2_x
   sta $0217
   
-  lda laser_2_y
+  lda laser_3_y
   sta $0218
-  lda laser_2_x
+  lda laser_3_x
   sta $021B
   
   rts
