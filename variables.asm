@@ -16,6 +16,7 @@ ship_speed	.rs 1
 
 ; bit mask to control laser on/off
 laser_mask		.rs 1
+laser_cooldown	.rs 1
 laser_1_x		.rs 1
 laser_1_y		.rs 1
 laser_2_x		.rs 1

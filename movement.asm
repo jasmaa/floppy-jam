@@ -4,6 +4,8 @@ InitShip:
   sta ship_y
   lda #$01
   sta ship_speed
+  lda #$10
+  sta laser_cooldown
   rts
 
 UpdateShip:
@@ -47,8 +49,13 @@ UpdateShip:
   lda ctrl_1
   and #%10000000
   beq .skip_fire_all
+  lda laser_cooldown
+  bne .skip_fire_all
   
   ; shitty lazzer firing code
+  lda #$10
+  sta laser_cooldown
+  
   lda laser_mask
   and #%00000001
   bne .skip_1
@@ -62,7 +69,7 @@ UpdateShip:
   lda ship_y
   sta laser_1_y
   jmp .skip_fire_all
-  .skip_1:
+.skip_1:
   
   lda laser_mask
   and #%00000010
@@ -77,7 +84,7 @@ UpdateShip:
   lda ship_y
   sta laser_2_y
   jmp .skip_fire_all
-  .skip_2:
+.skip_2:
   
   lda laser_mask
   and #%00000100
@@ -92,13 +99,22 @@ UpdateShip:
   lda ship_y
   sta laser_3_y
   jmp .skip_fire_all
-  .skip_3:
+.skip_3:
   
 .skip_fire_all:
   rts
 
 UpdateLaser:
 
+  ; check cooldown
+  lda laser_cooldown
+  beq .skip
+  ldx laser_cooldown
+  dex
+  stx laser_cooldown
+.skip:
+
+  ; move lasers
   lda laser_mask
   and #%00000001
   beq .kill_laser_1
