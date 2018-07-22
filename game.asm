@@ -15,7 +15,9 @@
   .bank 0
   .org $C000
 
+  ; includes
   INCLUDE "controller.asm"
+  INCLUDE "movement.asm"
   INCLUDE "constants.asm"
   INCLUDE "variables.asm"
   
@@ -135,6 +137,9 @@ LoadPalette:
   lda #$66
   sta rand_seed
   
+  ; set ship pos
+  jsr InitShipPos
+  
   ; set ppu
   lda #%10001000
   sta $2000
@@ -150,12 +155,6 @@ Forever:
 ; ===========================
 ; === START NMI INTERRUPT ===
 NMI:
-  LDA #$00
-  STA $2003       ; set the low byte (00) of the RAM address
-  LDA #$02
-  STA $4014       ; set the high byte (02) of the RAM address, start the transfer
-  rti ; short circuit for now
-
   ; set RAM address to 0200
   lda #$00
   sta $2003
@@ -171,13 +170,17 @@ NMI:
   sta $2005 ; disable PPU scrolling
   sta $2005
   
-; read controllers
+  ; read controllers
   jsr ReadCtrl1
   jsr ReadCtrl2
-
+  
 ; GAME ENGINE
-; put game engine here
+
+  jsr UpdateShipPos
+  jsr UpdateSprites
+
 ; END GAME ENGINE
+  rti
 	
 ; === END NMI INTERRUPT ===
 ; =========================
@@ -191,10 +194,10 @@ NMI:
   .org $E000
 	sprites:
 	; spaceship
-	.db $80, $00, %00000000, $80   ;00
-	.db $80, $00, %01000000, $88   ;04
-	.db $88, $10, %00000000, $80   ;08
-	.db $88, $10, %01000000, $88   ;0C
+	.db $10, $00, %00000000, $80   ;00
+	.db $10, $00, %01000000, $88   ;04
+	.db $18, $10, %00000000, $80   ;08
+	.db $18, $10, %01000000, $88   ;0C
     
 	
 	palette:
