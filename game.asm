@@ -9,40 +9,16 @@
   .inesmir 1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; VARIABLES
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  
-  .rsset $0000
-
-gamestate	.rs 1
-ctrl_1		.rs 1
-ctrl_2		.rs 1
-rand_seed	.rs 1
-pointerLo	.rs 1
-pointerHi	.rs 1
-
-STATE_TITLE		= $00
-STATE_PLAYING	= $01
-STATE_GAMEOVER	= $02
-  
-RWALL		= $F4
-UWALL		= $20
-DWALL		= $E0
-LWALL		= $04
-
-PADDLE_1_X	= $20
-PADDLE_2_X	= $E0
-PADDLE_1_H	= $18
-PADDLE_2_H	= $18
-PADDLE_SPEED= $02
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; PROGRAM - MAIN
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   .bank 0
   .org $C000
 
+  INCLUDE "controller.asm"
+  INCLUDE "constants.asm"
+  INCLUDE "variables.asm"
+  
 vblankwait:
   bit $2002
   bpl vblankwait
@@ -74,15 +50,15 @@ LoadBG:
   ldy #$00
   
 ; Load entire BG
-LoadBGLoop:
+.loop:
   lda [pointerLo], y	; can only be used with y
   sta $2007
   iny
-  bne LoadBGLoop
+  bne .loop
   inc pointerHi
   inx
   cpx #$04
-  bne LoadBGLoop
+  bne .loop
   rts
 	
 ; ===================  
@@ -127,12 +103,12 @@ clrmem:
   
 LoadSprites:
   ldx #$00
-LoadSpritesLoop:
+.loop:
   lda sprites, x
   sta $0200, x
   inx
   cpx #$10
-  bne LoadSpritesLoop
+  bne .loop
 
 LoadPalette:
   lda $2002
@@ -141,12 +117,12 @@ LoadPalette:
   lda #$00
   sta $2006
   ldx #$00
-LoadPaletteLoop:
+.loop:
   lda palette, x
   sta $2007
   inx
   cpx #$20
-  bne LoadPaletteLoop
+  bne .loop
 
 ; bg to title
   ;lda #LOW(title_bg)
@@ -202,35 +178,6 @@ NMI:
 ; GAME ENGINE
 ; put game engine here
 ; END GAME ENGINE
-
-; read controllers
-ReadCtrl1:
-  lda #$01
-  sta $4016
-  lda #$00
-  sta $4016
-  ldx #$08
-ReadCtrl1Loop:
-  lda $4016
-  lsr A
-  rol ctrl_1
-  dex
-  bne ReadCtrl1Loop
-  rts
-
-ReadCtrl2:
-  lda #$01
-  sta $4016
-  lda #$00
-  sta $4016
-  ldx #$08
-ReadCtrl2Loop:
-  lda $4017
-  lsr A
-  rol ctrl_2
-  dex
-  bne ReadCtrl2Loop
-  rts
 	
 ; === END NMI INTERRUPT ===
 ; =========================
