@@ -167,11 +167,11 @@ UpdateLaser:
   
   cmp #$20
   bcs .end_3
-  lda #%11111000
+  lda #%11111011
   and laser_mask
   sta laser_mask
   lda #%00100001
-  sta $021C
+  sta $021A
 .end_3:
 
   rts
