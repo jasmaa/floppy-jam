@@ -109,7 +109,7 @@ LoadSprites:
   lda sprites, x
   sta $0200, x
   inx
-  cpx #$10
+  cpx #$14
   bne .loop
 
 LoadPalette:
@@ -138,7 +138,7 @@ LoadPalette:
   sta rand_seed
   
   ; set ship pos
-  jsr InitShipPos
+  jsr InitShip
   
   ; set ppu
   lda #%10001000
@@ -176,7 +176,8 @@ NMI:
   
 ; GAME ENGINE
 
-  jsr UpdateShipPos
+  jsr UpdateShip
+  jsr UpdateLaser
   jsr UpdateSprites
 
 ; END GAME ENGINE
@@ -198,11 +199,16 @@ NMI:
 	.db $10, $00, %01000000, $88   ;04
 	.db $18, $10, %00000000, $80   ;08
 	.db $18, $10, %01000000, $88   ;0C
+	
+	; laser
+	.db $18, $01, %00000001, $18   ;10
     
 	
 	palette:
-	.db $0F,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$0F
-	.db $0F,$1C,$15,$14,$31,$02,$38,$3C,$0F,$1C,$15,$14,$31,$02,$38,$3C
+	; bg pal
+	.db $0F,$00,$0C,$05,$0F,$00,$0C,$05,$0F,$00,$0C,$05,$0F,$00,$0C,$05
+	; sprite pal
+	.db $0F,$00,$0C,$05, $0F,$16,$00,$00, $0F,$00,$00,$00, $0F,$00,$00,$00
   
   ; vectors
   .org $FFFA
