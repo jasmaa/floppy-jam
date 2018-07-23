@@ -16,8 +16,10 @@
   .org $C000
 
   ; includes
+  INCLUDE "alien.asm"
   INCLUDE "controller.asm"
-  INCLUDE "movement.asm"
+  INCLUDE "spaceship.asm"
+  INCLUDE "drawing.asm"
   INCLUDE "constants.asm"
   INCLUDE "variables.asm"
   
@@ -109,7 +111,7 @@ LoadSprites:
   lda sprites, x
   sta $0200, x
   inx
-  cpx #$1C
+  cpx #$2C
   bne .loop
 
 LoadPalette:
@@ -137,8 +139,9 @@ LoadPalette:
   lda #$66
   sta rand_seed
   
-  ; set ship pos
+  ; inits
   jsr InitShip
+  jsr InitAliens
   
   ; set ppu
   lda #%10001000
@@ -178,6 +181,7 @@ NMI:
 
   jsr UpdateShip
   jsr UpdateLaser
+  
   jsr UpdateSprites
 
 ; END GAME ENGINE
@@ -205,12 +209,17 @@ NMI:
 	.db $18, $01, %00000001, $28   ;14
 	.db $18, $01, %00000001, $38   ;18
     
+	; aliens
+	.db $10, $02, %00000010, $80   ;1C
+	.db $10, $03, %00000010, $88   ;20
+	.db $18, $12, %00000010, $80   ;24
+	.db $18, $13, %00000010, $88   ;28
 	
 	palette:
 	; bg pal
 	.db $0F,$1F,$1F,$1F, $0F,$00,$0C,$05, $0F,$00,$0C,$05, $0F,$00,$0C,$05
 	; sprite pal
-	.db $0F,$00,$0C,$05, $0F,$25,$00,$00, $0F,$00,$00,$00, $0F,$00,$00,$00
+	.db $0F,$00,$0C,$05, $0F,$25,$00,$00, $0F,$30,$24,$21, $0F,$00,$00,$00
   
   ; vectors
   .org $FFFA

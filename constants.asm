@@ -1,3 +1,5 @@
+; Constant
+
 STATE_TITLE		= $00
 STATE_PLAYING	= $01
 STATE_GAMEOVER	= $02

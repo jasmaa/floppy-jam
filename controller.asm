@@ -1,4 +1,5 @@
-; read controllers
+; Reads controllers
+
 ReadCtrl1:
   lda #$01
   sta $4016
