@@ -16,7 +16,7 @@
   .org $C000
 
   ; includes
-  INCLUDE "alien.asm"
+  INCLUDE "aliens.asm"
   INCLUDE "controller.asm"
   INCLUDE "spaceship.asm"
   INCLUDE "drawing.asm"
@@ -181,6 +181,7 @@ NMI:
 
   jsr UpdateShip
   jsr UpdateLaser
+  jsr UpdateAliens
   
   jsr UpdateSprites
 
