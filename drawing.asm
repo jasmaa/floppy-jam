@@ -35,6 +35,7 @@ UpdateSprites:
   sta $021B
   
   ; draw aliens
+  ; write a fancy loop here later
   lda alien_1_y
   sta $021C
   sta $0220
@@ -42,7 +43,6 @@ UpdateSprites:
   adc #$08
   sta $0224
   sta $0228
-  
   lda alien_1_x
   sta $021F
   sta $0227
@@ -50,5 +50,50 @@ UpdateSprites:
   adc #$08
   sta $0223
   sta $022B
+  
+  lda alien_2_y
+  sta $022C
+  sta $0230
+  clc
+  adc #$08
+  sta $0234
+  sta $0238
+  lda alien_2_x
+  sta $022F
+  sta $0237
+  clc
+  adc #$08
+  sta $0233
+  sta $023B
+  
+  lda alien_3_y
+  sta $023C
+  sta $0240
+  clc
+  adc #$08
+  sta $0244
+  sta $0248
+  lda alien_3_x
+  sta $023F
+  sta $0247
+  clc
+  adc #$08
+  sta $0243
+  sta $024B
+  
+  lda alien_4_y
+  sta $024C
+  sta $0250
+  clc
+  adc #$08
+  sta $0254
+  sta $0258
+  lda alien_4_x
+  sta $024F
+  sta $0257
+  clc
+  adc #$08
+  sta $0253
+  sta $025B
   
   rts

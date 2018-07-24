@@ -2,9 +2,24 @@
 
 InitAliens:
   lda #$80
-  sta alien_1_x
+  ldx #$00
+.loop:
+  sta alien_1_x, x
+  clc
+  adc #$10
+  inx
+  cpx #$04
+  bne .loop
+  
   lda #$50
-  sta alien_1_y
+  ldx #$00
+.loop2:
+  sta alien_1_y, x
+  clc
+  adc #$10
+  inx
+  cpx #$04
+  bne .loop2
   
   lda #%00001111
   sta alien_mask
@@ -13,28 +28,30 @@ InitAliens:
 
 UpdateAliens:
   ; move
-  ;ldx alien_1_x
-  ;inx
-  ;stx alien_1_x
+  ldx alien_1_x
+  inx
+  stx alien_1_x
   
   ; check take damage
-  lda #%00000001
-  sta curr_laser_mask
-  ldx #$00
-  
-.outer_loop:
-  ; check each laser
-  lda laser_mask
-  and curr_laser_mask
-  beq .outer_skip
   lda #%00000001
   sta curr_alien_mask
   ldy #$00
   
-  ; collision
-.inner_loop:
+; collision
+; for each alien, y
+.outer_loop:
   lda alien_mask
   and curr_alien_mask
+  beq .kill_alien
+  
+  lda #%00000001
+  sta curr_laser_mask
+  ldx #$00
+  
+; for each laser, x
+.inner_loop:
+  lda laser_mask
+  and curr_laser_mask
   beq .inner_skip
   
   lda laser_1_x, x 
@@ -57,16 +74,19 @@ UpdateAliens:
   sta $022A
 
 .inner_skip:
-  iny
-  clc
-  rol curr_alien_mask
-  cpy #$04
-  bne .inner_loop
-
-.outer_skip:
   inx
   clc
   rol curr_laser_mask
   cpx #$03
+  bne .inner_loop
+; end inner, x
+.kill_alien:
+ ; write kill code here
+.outer_skip:
+  iny
+  clc
+  rol curr_alien_mask
+  cpy #$04
   bne .outer_loop
+; end outer, y
   rts
