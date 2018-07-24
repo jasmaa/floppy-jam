@@ -8,6 +8,11 @@ InitAliens:
   rts
 
 UpdateAliens:
+  ; move
+  ldx alien_1_x
+  inx
+  stx alien_1_x
+  
   ; check take damage
   lda #$00000001
   sta curr_laser_mask
@@ -18,11 +23,22 @@ UpdateAliens:
   lda laser_mask
   and curr_laser_mask
   beq .skip
-  lda laser_1_x, x  
-  cmp alien_1_x
   
-  ; check if less for now
+  ; collision
+  ; FIGURE OUT HOW TO DO MULTIPLE ALIENS
+  lda laser_1_x, x 
+  cmp alien_1_x
+  bcc .skip
+  lda laser_1_x, x
+  sec
+  sbc #$10
+  cmp alien_1_x
   bcs .skip
+  lda laser_1_y, x
+  cmp alien_1_y
+  bcs .skip
+  
+  ; test
   lda #$00
   sta $021E
   sta $0222
