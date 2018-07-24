@@ -18,6 +18,7 @@ ship_speed	.rs 1
 
 ; laser var
 laser_mask		.rs 1	; bit mask to control laser on/off
+curr_laser_mask	.rs 1
 laser_cooldown	.rs 1
 ; keep this ordering!
 laser_1_x		.rs 1
@@ -28,8 +29,14 @@ laser_2_y		.rs 1
 laser_3_y		.rs 1
 ; keep this ordering!
 
-curr_laser_mask	.rs 1
-
 ; alien vars
+alien_mask		.rs 1
+curr_alien_mask	.rs 1
 alien_1_x		.rs 1
+alien_2_x		.rs 1
+alien_3_x		.rs 1
+alien_4_x		.rs 1
 alien_1_y		.rs 1
+alien_2_y		.rs 1
+alien_3_y		.rs 1
+alien_4_y		.rs 1
