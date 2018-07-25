@@ -40,3 +40,5 @@ alien_1_y		.rs 1
 alien_2_y		.rs 1
 alien_3_y		.rs 1
 alien_4_y		.rs 1
+
+temp			.rs 1

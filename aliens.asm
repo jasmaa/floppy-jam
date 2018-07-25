@@ -27,12 +27,7 @@ InitAliens:
   rts
 
 UpdateAliens:
-  ; move
-  ldx alien_1_x
-  inx
-  stx alien_1_x
-  
-  ; check take damage
+
   lda #%00000001
   sta curr_alien_mask
   ldy #$00
@@ -42,11 +37,18 @@ UpdateAliens:
 .outer_loop:
   lda alien_mask
   and curr_alien_mask
-  beq .kill_alien
+  beq .outer_skip
   
   lda #%00000001
   sta curr_laser_mask
   ldx #$00
+  
+  ; update active aliens
+  ; move
+  lda alien_1_x, y
+  clc
+  adc #$01
+  sta alien_1_x, y
   
 ; for each laser, x
 .inner_loop:
@@ -71,13 +73,9 @@ UpdateAliens:
   cmp alien_1_y, y
   bcc .inner_skip
   
-  ; test
-  lda #$00
-  sta $021E
-  sta $0222
-  sta $0226
-  sta $022A
-
+  ; kill alien
+  jsr kill_alien
+  
 .inner_skip:
   inx
   clc
@@ -85,8 +83,6 @@ UpdateAliens:
   cpx #$03
   bne .inner_loop
 ; end inner, x
-.kill_alien:
- ; write kill code here
 .outer_skip:
   iny
   clc
@@ -94,4 +90,37 @@ UpdateAliens:
   cpy #$04
   bne .outer_loop
 ; end outer, y
+  rts
+
+  
+; kill alien spaceship
+kill_alien:
+  sty temp
+  ; set mask and destroy y===========================MASK SETTING IS BUGGY
+  lda #%11111110
+  sta curr_alien_mask
+.mask_loop:
+  rol curr_alien_mask
+  dey
+  bne .mask_loop
+  lda alien_mask
+  and curr_alien_mask
+  
+  ; multiply y by 16
+  clc
+  rol temp
+  rol temp
+  rol temp
+  rol temp
+  ldy temp
+  
+  ;lda #%00100010
+  ; change color for now
+  lda #%00000001
+  sta $021E, y
+  sta $0222, y
+  sta $0226, y
+  sta $022A, y
+  
+  ; revert y here???? nah
   rts
