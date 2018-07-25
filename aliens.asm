@@ -65,6 +65,11 @@ UpdateAliens:
   lda laser_1_y, x
   cmp alien_1_y, y
   bcs .inner_skip
+  lda laser_1_y, x
+  clc
+  adc #$10
+  cmp alien_1_y, y
+  bcc .inner_skip
   
   ; test
   lda #$00
