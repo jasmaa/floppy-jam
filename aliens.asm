@@ -96,15 +96,19 @@ UpdateAliens:
 ; kill alien spaceship
 kill_alien:
   sty temp
-  ; set mask and destroy y===========================MASK SETTING IS BUGGY
+  ; set mask and destroy Y
   lda #%11111110
   sta curr_alien_mask
+  cpy #$00
+  beq .skip
 .mask_loop:
   rol curr_alien_mask
   dey
   bne .mask_loop
+.skip:
   lda alien_mask
   and curr_alien_mask
+  sta alien_mask
   
   ; multiply y by 16
   clc
