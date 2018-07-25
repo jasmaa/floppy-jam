@@ -22,6 +22,7 @@
   INCLUDE "drawing.asm"
   INCLUDE "constants.asm"
   INCLUDE "variables.asm"
+  INCLUDE "helpers.asm"
   
 vblankwait:
   bit $2002
@@ -192,7 +193,7 @@ NMI:
 ; =========================
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; PROGRAM - INTERRUPTS
+; PROGRAM - DATA & INTERRUPTS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   .bank 1
@@ -235,7 +236,7 @@ NMI:
 	; bg pal
 	.db $0F,$1F,$1F,$1F, $0F,$00,$0C,$05, $0F,$00,$0C,$05, $0F,$00,$0C,$05
 	; sprite pal
-	.db $0F,$00,$0C,$05, $0F,$25,$00,$00, $0F,$30,$24,$21, $0F,$00,$00,$00
+	.db $0F,$00,$0C,$05, $0F,$25,$30,$15, $0F,$30,$24,$21, $0F,$00,$00,$00
   
   ; vectors
   .org $FFFA

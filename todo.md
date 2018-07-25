@@ -2,8 +2,11 @@
 
   - optimize game + fix bugs
   - add enemies
-  - add levels
+    - ~~enemy and laser death~~
+    - path logic
+    - animated death
+  - ~~add levels~~ NO TIME
   - add lives
   - music and sfx?
-  - boss enemy????
+  - ~~boss enemy????~~ NO TIME
   - title and game over screens?

@@ -72,9 +72,9 @@ UpdateAliens:
   adc #$10
   cmp alien_1_y, y
   bcc .inner_skip
-  
-  ; kill alien
+  ; kill alien and laser
   jsr kill_alien
+  jsr kill_laser
   
 .inner_skip:
   inx
@@ -119,12 +119,48 @@ kill_alien:
   ldy temp
   
   ;lda #%00100010
-  ; change color for now
+  ; change pal and sprite
   lda #%00000001
   sta $021E, y
   sta $0222, y
   sta $0226, y
   sta $022A, y
+  lda #$21
+  sta $021D, y
+  lda #$22
+  sta $0221, y
+  lda #$31
+  sta $0225, y
+  lda #$32
+  sta $0229, y
   
-  ; revert y here???? nah
+  rts
+
+; shut off laser
+; MAKE BETTER WITH GENERAL SHUTOFF FUNC???
+kill_laser:
+  stx temp
+  lda #%11111110 
+  sta curr_laser_mask
+  cpx #$00
+  beq .skip
+.mask_loop:
+  rol curr_laser_mask
+  dex
+  bne .mask_loop
+.skip:
+  lda laser_mask
+  and curr_laser_mask
+  sta laser_mask
+  
+  ; multiply by 4
+  clc
+  rol temp
+  rol temp
+  ldx temp
+  
+  ; hide laser
+  lda #%00100001
+  sta $0212, x
+  
   rts

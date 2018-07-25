@@ -1,4 +1,5 @@
 ; Controls player spaceship
+; OPTIMIZE LASER CODE WITH LOOPS??
 
 InitShip:
   lda #$80
