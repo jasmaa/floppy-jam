@@ -198,7 +198,7 @@ UpdateExplosions:
   cmp #$00
   bne .skip
   
-  ; deactivate - check me!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  ; deactivate
   stx temp
   lda #%11111110
   sec
@@ -212,11 +212,30 @@ UpdateExplosions:
   and curr_exp_mask
   sta curr_exp_mask
   
-  ; do a color change or smth
-  ; derp test DELETE ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  lda #%00000001
-  sta $0202
-  ; derp test end
+  ; kill explosion
+  ; multiply by 16
+  lda temp
+  clc
+  rol a
+  rol a
+  rol a
+  rol a
+  tax
+  ; revert to alien, pal, and hide
+  lda #%00100010
+  sta $021E, x
+  sta $0222, x
+  sta $0226, x
+  sta $022A, x
+  lda #$02
+  sta $021D, x
+  lda #$03
+  sta $0221, x
+  lda #$12
+  sta $0225, x
+  lda #$13
+  sta $0229, x
+  
   
 .skip:
   clc
