@@ -41,4 +41,14 @@ alien_2_y		.rs 1
 alien_3_y		.rs 1
 alien_4_y		.rs 1
 
+; explosions for each alien
+exp_mask		.rs 1
+curr_exp_mask	.rs 1
+exp_cooldown_1	.rs 1
+exp_cooldown_2	.rs 1
+exp_cooldown_3	.rs 1
+exp_cooldown_4	.rs 1
+
+; temp vars
 temp			.rs 1
+temp2			.rs 1
