@@ -35,11 +35,20 @@ InitAliens:
 
 UpdateAliens:
 
+  ; randomly respawn aliens excluding explosion
+  lda #%11111111
+  eor exp_mask
+  sta temp
+  jsr prng
+  and temp
+  ora alien_mask
+  sta alien_mask
+
+; collision
   lda #%00000001
   sta curr_alien_mask
   ldy #$00
   
-; collision
 ; for each alien, y
 .outer_loop:
   lda alien_mask
@@ -51,6 +60,8 @@ UpdateAliens:
   ldx #$00
   
   ; update active aliens
+  jsr ShowAliens
+  
   ; move
   lda alien_1_x, y
   clc
@@ -99,6 +110,29 @@ UpdateAliens:
 ; end outer, y
   rts
 
+
+ShowAliens:				; FIX ME I'M BUGGY FSM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+; maybe alien activation check is buggy???
+  ; show alien
+  sty temp
+  clc
+  rol temp
+  rol temp
+  rol temp
+  rol temp
+  ldy temp
+  lda #%00000010
+  sta $021E, y
+  sta $0222, y
+  sta $0226, y
+  sta $022A, y
+  clc
+  ror temp
+  ror temp
+  ror temp
+  ror temp
+  ldy temp
+  rts
   
 ; kill alien spaceship
 KillAlien:
@@ -209,8 +243,8 @@ UpdateExplosions:
   dex
   jmp .loop2
 .skip2:
-  and curr_exp_mask
-  sta curr_exp_mask
+  and exp_mask
+  sta exp_mask
   
   ; kill explosion
   ; multiply by 16
