@@ -34,6 +34,7 @@ InitAliens:
   rts
 
 UpdateAliens:
+
   ; randomly respawn aliens excluding explosion
   jsr prng
   cmp #$10
@@ -64,7 +65,10 @@ UpdateAliens:
   
   ; update active aliens
   jsr ShowAlien
-  jsr MoveAlien
+  ;jsr MoveAlien
+  
+  ; check ship collision
+  jsr CheckShipCollide
   
 ; for each laser, x
 .inner_loop:
@@ -171,6 +175,10 @@ MoveAlien:
 ; kill alien spaceship
 KillAlien:
 
+  ; quick screen flash
+  lda #%00000001
+  sta $2001
+
   ; add to score
   lda score
   clc
@@ -225,6 +233,44 @@ KillAlien:
   
   rts
 
+CheckShipCollide:
+  lda ship_y
+  sec
+  sbc #$08
+  cmp alien_1_y, y
+  bcs .skip_ship_collide
+  lda ship_y
+  clc
+  adc #$08
+  cmp alien_1_y, y
+  bcc .skip_ship_collide
+  
+  lda ship_x
+  sec
+  sbc #$08
+  cmp alien_1_x, y
+  bcs .skip_ship_collide
+  lda ship_x
+  clc
+  adc #$08
+  cmp alien_1_x, y
+  bcc .skip_ship_collide
+  
+  lda ship_damage_cooldown
+  bne .skip_ship_collide
+  
+  ; damage
+  lda score
+  clc
+  adc #$01
+  sta score
+  
+  lda #$10
+  sta ship_damage_cooldown
+  
+.skip_ship_collide:
+  rts
+  
 ; shut off laser
 ; MAKE BETTER WITH GENERAL SHUTOFF FUNC???
 KillLaser:

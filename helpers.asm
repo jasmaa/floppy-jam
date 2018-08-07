@@ -15,3 +15,4 @@ prng:
 	sta rand_seed+0
 	cmp #$00 ; reload flags
 	rts
+	

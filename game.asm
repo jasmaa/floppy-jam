@@ -115,9 +115,9 @@ LoadPalette:
   bne .loop
 
 ; bg to title
-  lda #LOW(bg_test)
+  lda #LOW(bg1)
   sta pointerLo
-  lda #HIGH(bg_test)
+  lda #HIGH(bg1)
   sta pointerHi
   jsr LoadBG
   
@@ -240,8 +240,8 @@ NMI:
 	; sprite pal
 	.db $0F,$00,$0C,$05, $0F,$25,$30,$15, $0F,$30,$24,$21, $0F,$00,$00,$00
 	
-	bg_test:
-	.incbin "bg_test.nam"
+	bg1:
+	.incbin "bg1.nam"
   
   ; vectors
   .org $FFFA

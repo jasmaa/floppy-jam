@@ -7,6 +7,7 @@ ctrl_1		.rs 1
 ctrl_2		.rs 1
 
 score		.rs 1
+lives		.rs 1
 gamestate	.rs 1
 rand_seed	.rs 1
 pointerLo	.rs 1
@@ -16,6 +17,7 @@ pointerHi	.rs 1
 ship_x		.rs 1
 ship_y		.rs 1
 ship_speed	.rs 1
+ship_damage_cooldown	.rs 1
 
 ; laser var
 laser_mask		.rs 1	; bit mask to control laser on/off

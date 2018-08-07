@@ -9,9 +9,22 @@ InitShip:
   sta ship_speed
   lda #LASER_COOLDOWN_TIME
   sta laser_cooldown
+  lda #$03
+  sta lives
+  lda #$10
+  sta ship_damage_cooldown
   rts
 
 UpdateShip:
+
+  ; move ship damage cooldown Buggy???????????????????????????
+  lda ship_damage_cooldown
+  beq .skip_damage_cooldown
+  sec
+  sbc #$01
+  sta ship_damage_cooldown
+.skip_damage_cooldown:
+
   ; check move up
   lda ctrl_1
   and #%00001000
