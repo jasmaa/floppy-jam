@@ -25,7 +25,7 @@ InitAliens:
   sta alien_mask
   
   ; init exp cooldown
-  lda #$20
+  lda #EXP_COOLDOWN_TIME
   sta exp_cooldown_1
   sta exp_cooldown_2
   sta exp_cooldown_3
@@ -36,6 +36,9 @@ InitAliens:
 UpdateAliens:
 
   ; randomly respawn aliens excluding explosion
+  jsr prng
+  cmp #$10
+  bcs .skip_respawn
   lda #%11111111
   eor exp_mask
   sta temp
@@ -43,6 +46,7 @@ UpdateAliens:
   and temp
   ora alien_mask
   sta alien_mask
+.skip_respawn:
 
 ; collision
   lda #%00000001
@@ -61,12 +65,7 @@ UpdateAliens:
   
   ; update active aliens
   jsr ShowAliens
-  
-  ; move
-  lda alien_1_x, y
-  clc
-  adc #$01
-  sta alien_1_x, y
+  jsr MoveAliens
   
 ; for each laser, x
 .inner_loop:
@@ -111,8 +110,7 @@ UpdateAliens:
   rts
 
 
-ShowAliens:				; FIX ME I'M BUGGY FSM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-; maybe alien activation check is buggy???
+ShowAliens:
   ; show alien
   sty temp
   clc
@@ -132,6 +130,24 @@ ShowAliens:				; FIX ME I'M BUGGY FSM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ror temp
   ror temp
   ldy temp
+.done:
+  rts
+
+MoveAliens:
+  ; move
+  jsr prng
+  and #%00000111
+  sta temp
+  
+  lda alien_1_x, y
+  clc
+  adc temp
+  sta alien_1_x, y
+  
+  lda alien_1_y, y
+  clc
+  adc #$01
+  ;sta alien_1_y, y
   rts
   
 ; kill alien spaceship
@@ -232,6 +248,10 @@ UpdateExplosions:
   cmp #$00
   bne .skip
   
+  ; reset cooldown
+  lda #EXP_COOLDOWN_TIME
+  sta exp_cooldown_1, x
+  
   ; deactivate
   stx temp
   lda #%11111110
@@ -269,7 +289,6 @@ UpdateExplosions:
   sta $0225, x
   lda #$13
   sta $0229, x
-  
   
 .skip:
   clc
