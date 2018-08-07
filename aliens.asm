@@ -34,7 +34,6 @@ InitAliens:
   rts
 
 UpdateAliens:
-
   ; randomly respawn aliens excluding explosion
   jsr prng
   cmp #$10
@@ -64,8 +63,8 @@ UpdateAliens:
   ldx #$00
   
   ; update active aliens
-  jsr ShowAliens
-  jsr MoveAliens
+  jsr ShowAlien
+  jsr MoveAlien
   
 ; for each laser, x
 .inner_loop:
@@ -109,9 +108,8 @@ UpdateAliens:
 ; end outer, y
   rts
 
-
-ShowAliens:
-  ; show alien
+; show active aliens
+ShowAlien:
   sty temp
   clc
   rol temp
@@ -133,25 +131,50 @@ ShowAliens:
 .done:
   rts
 
-MoveAliens:
-  ; move
+; Move aliens
+MoveAlien:
   jsr prng
-  and #%00000111
-  sta temp
+  sta temp2
   
+  ; choose direction flip
+  lda temp2
+  cmp #$05
+  bcs .skip
+  lda alien_1_dir, y
+  eor #%11111111
+  sta alien_1_dir, y
+  .skip:
+  
+  lda alien_1_dir, y
+  beq .move_right
+.move_left:
+  lda alien_1_x, y
+  sec
+  sbc #$01
+  jmp .move_x_done
+.move_right:
   lda alien_1_x, y
   clc
-  adc temp
+  adc #$01
+.move_x_done:
   sta alien_1_x, y
-  
+
   lda alien_1_y, y
   clc
   adc #$01
-  ;sta alien_1_y, y
+
+  sta alien_1_y, y
   rts
   
 ; kill alien spaceship
 KillAlien:
+
+  ; add to score
+  lda score
+  clc
+  adc #$01
+  sta score
+
   sty temp
   ; set alien and exp mask and destroy Y
   lda #%11111110
@@ -248,9 +271,11 @@ UpdateExplosions:
   cmp #$00
   bne .skip
   
-  ; reset cooldown
+  ; reset vars
   lda #EXP_COOLDOWN_TIME
   sta exp_cooldown_1, x
+  lda #$00
+  sta alien_1_y, x
   
   ; deactivate
   stx temp

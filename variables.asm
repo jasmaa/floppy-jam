@@ -6,6 +6,7 @@
 ctrl_1		.rs 1
 ctrl_2		.rs 1
 
+score		.rs 1
 gamestate	.rs 1
 rand_seed	.rs 1
 pointerLo	.rs 1
@@ -40,6 +41,11 @@ alien_1_y		.rs 1
 alien_2_y		.rs 1
 alien_3_y		.rs 1
 alien_4_y		.rs 1
+
+alien_1_dir		.rs 1
+alien_2_dir		.rs 1
+alien_3_dir		.rs 1
+alien_4_dir		.rs 1
 
 ; explosions for each alien
 exp_mask		.rs 1
