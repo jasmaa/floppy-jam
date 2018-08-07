@@ -91,6 +91,7 @@ UpdateAliens:
   ; kill alien and laser
   jsr KillAlien
   jsr KillLaser
+  jmp SkipUpdateAliens
   
 .inner_skip:
   inx
@@ -106,6 +107,7 @@ UpdateAliens:
   cpy #$04
   bne .outer_loop
 ; end outer, y
+SkipUpdateAliens:
   rts
 
 ; show active aliens
@@ -199,11 +201,10 @@ KillAlien:
   sta exp_mask
   
   ; multiply y by 16
-  clc
-  rol temp
-  rol temp
-  rol temp
-  rol temp
+  asl temp
+  asl temp
+  asl temp
+  asl temp
   ldy temp
   
   ;lda #%00100010
