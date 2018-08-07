@@ -97,7 +97,7 @@ LoadSprites:
   lda sprites, x
   sta $0200, x
   inx
-  cpx #$6C
+  cpx #$84
   bne .loop
 
 LoadPalette:
@@ -115,11 +115,11 @@ LoadPalette:
   bne .loop
 
 ; bg to title
-  ;lda #LOW(title_bg)
-  ;sta pointerLo
-  ;lda #HIGH(title_bg)
-  ;sta pointerHi
-  ;jsr LoadBG
+  lda #LOW(bg_test)
+  sta pointerLo
+  lda #HIGH(bg_test)
+  sta pointerHi
+  jsr LoadBG
   
   ; set seed
   lda #$66
@@ -221,16 +221,27 @@ NMI:
 	.db $38, $13, %00000010, $58   ;58
 	
 	; score label
-	.db $10, $04, %00000010, $38   ;5C
-	.db $10, $04, %00000010, $30   ;60
-	.db $10, $04, %00000010, $28   ;64
-	.db $10, $04, %00000010, $20   ;68
+	.db $10, $04, %00000010, $58   ;5C
+	.db $10, $04, %00000010, $50   ;60
+	.db $10, $04, %00000010, $48   ;64
+	.db $10, $04, %00000010, $40   ;68
+	
+	; text label
+	.db $10, $14, %00000010, $10   ;6C
+	.db $10, $15, %00000010, $18   ;70
+	.db $10, $16, %00000010, $20   ;74
+	.db $10, $17, %00000010, $28   ;78
+	.db $10, $18, %00000010, $30   ;7C
+	.db $10, $19, %00000010, $38   ;80
 	
 	palette:
 	; bg pal
-	.db $0F,$1F,$1F,$1F, $0F,$00,$0C,$05, $0F,$00,$0C,$05, $0F,$00,$0C,$05
+	.db $0F,$1F,$30,$1F, $0F,$1F,$30,$1F, $0F,$1F,$30,$1F, $0F,$1F,$30,$1F
 	; sprite pal
 	.db $0F,$00,$0C,$05, $0F,$25,$30,$15, $0F,$30,$24,$21, $0F,$00,$00,$00
+	
+	bg_test:
+	.incbin "bg_test.nam"
   
   ; vectors
   .org $FFFA
