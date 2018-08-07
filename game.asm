@@ -19,6 +19,7 @@
   INCLUDE "aliens.asm"
   INCLUDE "controller.asm"
   INCLUDE "spaceship.asm"
+  INCLUDE "ui.asm"
   INCLUDE "drawing.asm"
   INCLUDE "constants.asm"
   INCLUDE "variables.asm"
@@ -169,6 +170,8 @@ NMI:
   jsr UpdateAliens
   jsr UpdateExplosions
   
+  jsr UpdateLabels
+  
   jsr UpdateSprites
 
 ; END GAME ENGINE
@@ -218,10 +221,10 @@ NMI:
 	.db $38, $13, %00000010, $58   ;58
 	
 	; score label
-	.db $10, $04, %00000010, $20   ;5C
-	.db $10, $04, %00000010, $28   ;60
-	.db $10, $04, %00000010, $30   ;64
-	.db $10, $04, %00000010, $38   ;68
+	.db $10, $04, %00000010, $38   ;5C
+	.db $10, $04, %00000010, $30   ;60
+	.db $10, $04, %00000010, $28   ;64
+	.db $10, $04, %00000010, $20   ;68
 	
 	palette:
 	; bg pal

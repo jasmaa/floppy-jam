@@ -96,4 +96,22 @@ UpdateSprites:
   sta $0253
   sta $025B
   
+  ; draw score hard coded
+  lda digit_1
+  clc
+  adc #$04
+  sta $025D
+  lda digit_2
+  clc
+  adc #$04
+  sta $0261
+  lda digit_3
+  clc
+  adc #$04
+  sta $0265
+  lda digit_4
+  clc
+  adc #$04
+  sta $0269
+  
   rts

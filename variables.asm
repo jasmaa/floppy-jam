@@ -55,6 +55,12 @@ exp_cooldown_2	.rs 1
 exp_cooldown_3	.rs 1
 exp_cooldown_4	.rs 1
 
+; score
+digit_1			.rs 1
+digit_2			.rs 1
+digit_3			.rs 1
+digit_4			.rs 1
+
 ; temp vars
 temp			.rs 1
 temp2			.rs 1
