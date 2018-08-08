@@ -1,6 +1,6 @@
-# Floppy Jam: Title Pending
+# Spooter
 
-Very badly written NES space shoot 'em up for Floppy Jam
+Very badly written NES space shoot 'em up for Floppy Jam 2018
 
 ## Build and Run
   - `compile.bat`
@@ -8,6 +8,6 @@ Very badly written NES space shoot 'em up for Floppy Jam
 
 ## How to Play
   - Shoot the floppy disks
-###
+### Controls
   - A: Shoot
   - Control pad: Move

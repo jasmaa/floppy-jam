@@ -6,7 +6,7 @@
     - ~~path logic~~ lazy
     - ~~animated death~~
   - ~~add levels~~ NO TIME
-  - add lives
+  - ~~add lives~~
   - music and sfx?
   - ~~boss enemy????~~ NO TIME
-  - title and game over screens?
+  - title and ~~game over~~ screens?
