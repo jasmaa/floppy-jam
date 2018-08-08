@@ -125,9 +125,12 @@ LoadPalette:
   lda #$66
   sta rand_seed
   
-  ; inits
+  ; Init game
   jsr InitShip
   jsr InitAliens
+  
+  lda #STATE_PLAYING
+  sta gamestate
   
   ; set ppu
   lda #%10001000
@@ -165,14 +168,75 @@ NMI:
   
 ; GAME ENGINE
 
+  lda gamestate
+  cmp #STATE_PLAYING
+  bne .game_over
+  ; playing
   jsr UpdateShip
   jsr UpdateLaser
   jsr UpdateAliens
   jsr UpdateExplosions
-  
   jsr UpdateLabels
-  
   jsr UpdateSprites
+  
+  ; check state
+  lda lives
+  bne .done
+  lda #STATE_GAMEOVER
+  sta gamestate
+  
+  lda #%00001000 ; disable NMI
+  sta $2000
+  lda #%00000000 ; disable rendering
+  sta $2001
+  
+  ; bg to game over
+  lda #LOW(gameover_bg)
+  sta pointerLo
+  lda #HIGH(gameover_bg)
+  sta pointerHi
+  jsr LoadBG
+  
+  lda #%10001000
+  sta $2000 ; set PPUCTRL
+  lda #%10011110
+  sta $2001 ; set PPUMASK
+  lda #%00000000
+  
+.game_over:
+  lda #%00001000
+  sta $2001 ; clear sprites on screen
+  
+  lda ctrl_1
+  and #%00010000
+  beq .done
+  
+  ; Init game
+  jsr InitShip
+  jsr InitAliens
+  lda #STATE_PLAYING
+  sta gamestate
+  lda #$00
+  sta score
+  sta ship_damage_cooldown
+  
+  ; bg to sky
+  lda #%00001000 ; disable NMI
+  sta $2000
+  lda #%00000000 ; disable rendering
+  sta $2001
+  lda #LOW(bg1)
+  sta pointerLo
+  lda #HIGH(bg1)
+  sta pointerHi
+  jsr LoadBG
+  lda #%10001000
+  sta $2000 ; set PPUCTRL
+  lda #%10011110
+  sta $2001 ; set PPUMASK
+  lda #%00000000
+  
+.done:
 
 ; END GAME ENGINE
   rti
@@ -253,6 +317,8 @@ NMI:
 	
 	bg1:
 	.incbin "bg1.nam"
+	gameover_bg:
+	.incbin "gameover.nam"
   
   ; vectors
   .org $FFFA

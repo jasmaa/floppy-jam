@@ -11,7 +11,7 @@ InitAliens:
   cpx #$04
   bne .loop
   
-  lda #$50
+  lda #$00
   ldx #$00
 .loop2:
   sta alien_1_y, x
