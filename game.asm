@@ -50,7 +50,27 @@ LoadBG:
   cpx #$04
   bne .loop
   rts
-	
+
+LoadPartialBG:
+  lda $2002
+  lda #$3A	; remember top row doesn't get rendered
+  sta $2006
+  lda #$80
+  sta $2006
+  ldx #$00
+  ldy #$00
+; Load BG
+.loop:
+  lda [pointerLo], y	; can only be used with y
+  sta $2007
+  iny
+  bne .loop
+  inc pointerHi
+  inx
+  cpx #$04
+  bne .loop
+  rts
+  
 ; ===================  
 ; === START RESET ===
 
@@ -132,6 +152,9 @@ LoadPalette:
   lda #STATE_PLAYING
   sta gamestate
   
+  lda #BG_COOLDOWN_TIME
+  sta bg_cooldown
+  
   ; set ppu
   lda #%10001000
   sta $2000
@@ -171,6 +194,7 @@ NMI:
   lda gamestate
   cmp #STATE_PLAYING
   bne .game_over
+  
   ; playing
   jsr UpdateShip
   jsr UpdateLaser
@@ -206,6 +230,8 @@ NMI:
 .game_over:
   lda #%00001000
   sta $2001 ; clear sprites on screen
+  
+  jsr DrawBG
   
   lda ctrl_1
   and #%00010000
@@ -316,9 +342,13 @@ NMI:
 	.db $0F,$00,$0C,$05, $0F,$25,$30,$15, $0F,$30,$24,$21, $0F,$00,$00,$00
 	
 	bg1:
-	.incbin "bg1.nam"
+	  .incbin "bg1.nam"
 	gameover_bg:
-	.incbin "gameover.nam"
+	  .incbin "gameover.nam"
+	gameover_bg_sub_1:
+	  .incbin "gameover_sub_1.nam"
+	gameover_bg_sub_2:
+	  .incbin "gameover_sub_2.nam"
   
   ; vectors
   .org $FFFA

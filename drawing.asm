@@ -121,3 +121,48 @@ UpdateSprites:
   sta $0285
   
   rts
+
+DrawBG:
+; update bg
+  lda bg_cooldown
+  sec
+  sbc #$01
+  sta bg_cooldown
+  bne .bg_cooldown_done
+  
+  ; reset time
+  lda #BG_COOLDOWN_TIME
+  sta bg_cooldown
+  
+  lda #%00001000 ; disable NMI
+  sta $2000
+  lda #%00000000 ; disable rendering
+  sta $2001
+  
+  ; switch choice
+  lda #%11111111
+  eor bg_choice
+  sta bg_choice
+  beq .switch_second
+
+  lda #LOW(gameover_bg_sub_1)
+  sta pointerLo
+  lda #HIGH(gameover_bg_sub_1)
+  sta pointerHi
+  jmp .switch_done
+.switch_second:
+  lda #LOW(gameover_bg_sub_2)
+  sta pointerLo
+  lda #HIGH(gameover_bg_sub_2)
+  sta pointerHi
+.switch_done:
+  
+  jsr LoadPartialBG
+  lda #%10001000
+  sta $2000 ; set PPUCTRL
+  lda #%10001110
+  sta $2001 ; set PPUMASK
+  lda #%00000000
+  
+.bg_cooldown_done:
+  rts

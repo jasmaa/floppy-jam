@@ -13,6 +13,9 @@ rand_seed	.rs 1
 pointerLo	.rs 1
 pointerHi	.rs 1
 
+bg_choice	.rs	1
+bg_cooldown	.rs 1
+
 ; ship control vars
 ship_x		.rs 1
 ship_y		.rs 1
