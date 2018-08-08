@@ -11,18 +11,38 @@ InitShip:
   sta laser_cooldown
   lda #$03
   sta lives
-  lda #$10
-  sta ship_damage_cooldown
   rts
 
 UpdateShip:
 
-  ; move ship damage cooldown Buggy???????????????????????????
+  ; move ship damage cooldown
   lda ship_damage_cooldown
   beq .skip_damage_cooldown
   sec
   sbc #$01
   sta ship_damage_cooldown
+  
+  ; flash
+  and #%00000011
+  beq .show_ship
+  ; hide ship
+  lda #%00100000
+  sta $0202
+  sta $020A
+  lda #%01100000
+  sta $0206
+  sta $020E
+  jmp .flash_done
+  ; show ship
+.show_ship:
+  lda #%00000000
+  sta $0202
+  sta $020A
+  lda #%01000000
+  sta $0206
+  sta $020E
+.flash_done:
+  
 .skip_damage_cooldown:
 
   ; check move up

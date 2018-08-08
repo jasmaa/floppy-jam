@@ -10,7 +10,6 @@ UpdateLabels:
 
 ; converts score to digits
 CalcScore:
-
   lda #$00
   sta digit_1
   sta digit_2

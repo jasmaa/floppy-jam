@@ -65,7 +65,7 @@ UpdateAliens:
   
   ; update active aliens
   jsr ShowAlien
-  ;jsr MoveAlien
+  jsr MoveAlien
   
   ; check ship collision
   jsr CheckShipCollide
@@ -260,12 +260,12 @@ CheckShipCollide:
   bne .skip_ship_collide
   
   ; damage
-  lda score
-  clc
-  adc #$01
-  sta score
+  lda lives
+  sec
+  sbc #$01
+  sta lives
   
-  lda #$10
+  lda #SHIP_DAMAGE_COOLDOWN_TIME
   sta ship_damage_cooldown
   
 .skip_ship_collide:

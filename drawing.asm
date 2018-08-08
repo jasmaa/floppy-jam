@@ -114,4 +114,10 @@ UpdateSprites:
   adc #$04
   sta $0269
   
+  ; draw life
+  lda lives
+  clc
+  adc #$04
+  sta $0285
+  
   rts
